@@ -91,10 +91,125 @@
       - Android / Symbian / iOS
 
 
+## Aula 1
+**Escrito no tableto**
+pdf
+
+## Aula 2
+
+### **Principais Conceitos:**
+- **Processo:**
+    - **chave** do SO
+    - Caracterizado por programas em execução
+    - Cada processo possui:
+      - Um espaço de endereço;
+      - Uma lista de alocação de memória (mínima, máximo);
+      - Um conjunto de registradores (contador de programa);
+    - O SO controla **todos** os processos
+
+  -  **Estados Básicos dos Processos**
+      - **Executando:** 
+        - O processo está atualmente em execução na CPU.
+        - Está utilizando os recursos do processador para realizar suas tarefas.
+        - Pode ser interrompido pelo sistema operacional para dar lugar a outro processo.
+
+      - **Bloqueado:** 
+        - O processo está esperando por um evento externo, como uma operação de entrada/saída (E/S) ser concluída.
+        - Não pode continuar a execução até que o evento pelo qual está esperando ocorra.
+        - **Exemplo:**
+     Quando o SO suspende um processo P1 temporariamente
+     para executar um processo P2, o processo P1 deve ser
+     reiniciado exatamente no mesmo estado no qual estava 
+     ao
+     ser suspenso. Para tanto, todas as informações a 
+     respeito do
+     processo P1 são armazenadas em uma tabela de 
+     processos (process table). Essa tabela é um vetor ou 
+     uma lista encadeada de estruturas.
+
+      - **Pronto:** 
+        - O processo está na fila de prontos, aguardando para ser executado pela CPU.
+        - Já passou pela fase de inicialização e está pronto para ser executado assim que o processador estiver disponível.
+        - Pode ser selecionado pelo escalonador de processos para execução a qualquer momento.
+  - Um processo pode resultar na execução de outros processos, chamados processos-filhos:
+    - Características de hierarquia de processos
+      - Comunicação (interação) e Sincronização;
+      - Segurança e Proteção;
+  - Escalonadores de processos: processo que escolhe qual será o próximo processo a ser executado;
+    - Diversas técnicas para o escalonamento de processos.
+  - Comunicação e sincronismo entre processos – solução:
+    - Semáforos;
+    - Monitores;
+    - Instruções especiais em hardware;
+    - Troca de mensagens;
+  
+
+- **Memória:**
+- **Chamadas ao Sistema:**
+
+
 
 # Programação Orientada a Objetos
-Conteúdo sobre Programação Orientada a Objetos.
 
+## Aula 1
+
+### Introdução a java
+1. Orientação a objetos: Java é totalmente orientada a objetos, o que significa que toda lógica é organizada ao redor de objetos que interagem entre si.
+2. Portabilidade: usando o JVM (java virtual machine) permite que execute o codigo de java independente do SO
+
+### Estrutura básica
+
+```java
+public class PrimeiroPrograma{
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+```
+
+- Todo programa java é contido em uma classe. Ex: classe `PrimeiroPrograma`
+- `System.out.println` é o `print`
+
+### Introdução a POO
+A Programação Orientada a Objetos (POO) é um paradigma de programação que representa conceitos através de "objetos" que possuem dados (atributos) e funcionalidades (métodos). A POO facilita o gerenciamento de programas complexos ao dividir o código em componentes reutilizáveis, bem definidos e interconectados.
+
+##### Conceito básicos:
+
+1. **Classe:**
+Representa um modelo ou molde que define o comportamento e as características comuns a um grupo de objetos.
+```java
+public class pessoa {
+
+    // atributos (propriedades)
+    String nome;
+    int idade;
+
+    // método construtor
+    public pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    } 
+    
+    // método
+
+    public void apresentar(){
+        System.out.println("Olá, eu sou " + nome + " e tenho " + idade + " anos.");
+    }
+}
+```
+
+2. **Objeto:**
+é uma instancia completa da classe, por ex na main:
+
+```java
+public class main {
+    public static void main(String[] args) {
+        pessoa p1 = new pessoa("João", 20);
+        p1.apresentar(); // Olá, eu sou João e tenho 20 anos.
+    }   
+}
+```
 # Algoritmo e Estrutura de Dados II
 Conteúdo sobre Algoritmo e Estrutura de Dados II.
 
