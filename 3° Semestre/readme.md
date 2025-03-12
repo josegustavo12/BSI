@@ -211,7 +211,99 @@ public class main {
 }
 ```
 # Algoritmo e Estrutura de Dados II
-Conteúdo sobre Algoritmo e Estrutura de Dados II.
+
+## Aula 1
+### Introdução a Grafos
+#### O que são Grafos?
+
+Grafos são estruturas matemáticas usadas para modelar relações entre objetos. Um grafo é composto por:
+- **Vértices (ou nós):** Representam os objetos.
+- **Arestas (ou arcos):** Representam as conexões ou relações entre os objetos.
+
+#### Exemplo de Grafo:
+
+```plaintext
+  A -- B
+  |    |
+  C -- D
+```
+
+Neste exemplo, `A`, `B`, `C` e `D` são vértices, e as linhas que os conectam são arestas.
+
+#### Grafos:
+
+- **Definições:** Um grafo G = ( V, E ) é composto de:
+  - V: conjunto de vértices
+  - E: conjunto de arestas (edges)
+  - Se α={v, w} é uma aresta de um grafo, dizemos que α liga os vértices v e w, ou que incide em v (e em w).
+
+  ![](data/grafo_simples.png)
+
+  - **Vértices adjacentes:** vértices conectados por uma aresta.
+  - **Grau de um vértice:** número de arestas incidentes.
+    - **Exemplo:** na imagem acima temos:
+      - a é adjacentes de b
+      - a é adjacentes de c
+      - o grau de a é 2
+  - **Loop:** quando uma aresta conecta um vértice a ele mesmo (azul)
+  - **Arestas multiplas:** quando há mais de uma aresta ligando os mesmos vertices (laranja)
+    ![](data/arestasmultiplas_e_loop.png)
+
+- **Tipos de grafos:**
+  - **Simples**: grafo sem laços nem arestas múltiplas.
+  - **Vazio**: um grafo G é vazio se V(G) = E(G) = ∅.
+  - **Trivial**: um grafo com apenas um vértice e nenhuma aresta.
+  - **Completo**: grafo simples em que qualquer dois de seus vértices distintos são adjacentes.
+    - Existe um único grafo completo com n vértices, denotado Kn. O grafo K3 é também chamado de triângulo.
+
+
+
+
+- **Grafo Direcionado (ou Dígrafo):** é um conjunto de vértices e um conjunto de arcos
+  - Um dígrafo D = (V, A) é composto de:
+    - V: conjunto de vertíces;
+    - A: conjunto de arestas;
+
+  ![](data/digrafo1.png)
+
+  - **Arco:** é um par ordenado de vértices, ex: v e w são vértices (nós) e v-w é um arco (conexão)
+  - O dígrafo pode ser escrito pela sua lista de arcos 
+    - **Exemplo:** a-v, a-c, v-w, v-d, w-v, w-f, d-f, c-w
+  - A **presença** de um arco v-w é **independente** da existência de w-v.
+  - Dizemos que o vértice w é vizinho de um vértice v, que w é adjacente a v, ou ainda que v domina w
+  - Dois arcos são **antiparalelos** se a ponta inicial de um é a ponta final do outro
+  - O **grau de entrada** de um vértice v é o número de arcos com ponta final v
+  - O **grau de saída** de um vértice v é o número de arcos com ponta inicial v
+    - **Exemplo:** V tem grau de entrada 1 e grau de saída 2
+- **Dígrafo Simetrico:** ▪ Um dígrafo é simétrico se cada um de seus arcos é antiparalelo a outro
+  ![](data/digrafo_simetrico.png)
+
+
+
+
+- **Grafo Ponderado:** As arestas têm pesos associados, representando, por exemplo, custos ou distâncias.
+
+#### Grafos podem ser representações de problemas
+**Exemplo 1:**
+Uma pessoa que sai em uma viagem geralmente quer saber
+qual o caminho mais curto ou qual o caminho mais barato
+para ir de uma cidade a outra.
+
+![](data/grafo_viagem_buj_tempo.png)
+
+**Exemplo 2:**
+Uma pessoa que sai em uma viagem geralmente quer saber
+qual o caminho mais curto ou qual o caminho mais barato
+para ir de uma cidade a outra.
+
+![](data/grafo_viagem_buj_dinheiro.png)
+
+- Na Web, documentos fazem referências a outros documentos
+por meio de links
+- A Web é um grafo: os nós são documentos e as conexões são
+os links
+- Algoritmos baseados em grafos são essenciais para motores
+de busca e problemas de recomendação, por exemplo.
 
 # Requisitos de Software
 Conteúdo sobre Requisitos de Software.
