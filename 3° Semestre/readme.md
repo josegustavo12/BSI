@@ -429,7 +429,6 @@ As listas são uma estrutura de dados fundamental em Haskell. Elas são represen
 
 #### **Exemplo de lista:**
 ```haskell
-numeros :: [Int]
 numeros = [1, 2, 3, 4, 5]
 ```
 
@@ -512,5 +511,116 @@ o4 = [4, False, "oi"] -- essa lista não funciona, pois ela não possui um tipo
   ```
 
   A lista `[3, 7, 2]` tem **3 elementos**, e a função retorna `3`.
+
+## Aula 3
+
+### **Guardas**
+
+guardas são expressões booleanas utilizadas para definir o comportamento de uma função com base em condições específicas. Elas permitem escrever código mais expressivo e legível, funcionando como uma alternativa mais organizada ao uso de if-then-else.
+
+- Matematicamente elas são definidas dessa forma:
+
+```math
+sinal(x) = \begin{cases} 
+1, & \text{se } x > 0 \\ 
+0, & \text{se } x = 0 \\ 
+-1, & \text{caso contrário} 
+\end{cases}
+```
+
+- Em haskell, elas são definidas dessa forma:
+
+```haskell
+sinal(x)
+    | x > 0 = 1         -- Retorna 1 se x > 0
+    | x == 0 = 0        -- Retorna 0 se x == 0
+    | otherwise = -1    -- Retorna -1 para outros casos
+```
+
+#### Funcionamento
+- As guardas são avaliadas de cima para baixo:
+  - Se `x > 0`, retorna `1`.
+  - Se `x == 0`, retorna `0`.
+  - Se `x < 0`, o `otherwise` retorna `-1`.
+
+- O `otherwise` equivale a `True`, então, se colocado primeiro, impediria a avaliação das outras condições, tornando a função inválida.
+
+### Função `SomaPos`
+A função `somaPos` recebe uma lista de números e retorna a soma de todos os valores **positivos** da lista.
+
+- **Caso base:**  
+  Se a lista estiver vazia (`[]`), retorna `0`.
+  
+- **Caso recursivo:**  
+  A lista é decomposta em `x:xs`, onde `x` é a cabeça (primeiro elemento) e `xs` é o restante da lista:
+  - Se `x > 0`, soma `x` com o resultado da chamada recursiva `somaPos xs`.
+  - Se `x` não for positivo (`x ≤ 0`), apenas continua a recursão com `xs`, ignorando `x`.
+
+---
+
+### Implementação em Haskell
+
+```haskell
+somaPos [] = 0  -- Caso base: lista vazia retorna 0
+somaPos (x:xs) 
+    | x > 0 = x + somaPos xs  -- Se x for positivo, soma com o restante da lista
+    | otherwise = somaPos xs   -- Caso contrário, ignora x e continua a soma
+```
+#### Exemplo:
+
+#### Lista:
+```
+3 -1 5 0 7 -2
+```
+
+#### Processo:
+- Lista de entrada: `[3, -1, 5, 0, 7, -2]`
+- Números positivos: `[3, 5, 7]`
+- Soma: `3 + 5 + 7 = 15`
+
+
+### Bhaskara
+
+- Matematicamente:
+Aqui está a **fórmula de Bhaskara** representada no formato que você pediu, utilizando a notação de colchetes para diferentes casos do **Δ (delta)**:
+
+```math
+x =
+\begin{cases} 
+[], & \text{se } \Delta < 0 \\ 
+[x'], & \text{se } \Delta = 0 \\ 
+[x', x''], & \text{se } \Delta > 0 
+\end{cases}
+```
+
+**Onde:**
+```math
+\Delta = b² - 4ac
+```
+```math
+\frac{-b}{2a}, \quad \text{A unida solução é } \Delta = 0\
+```
+
+
+```math
+x' = \frac{-b + \sqrt{\Delta}}{2a}, \quad \text{quando } \Delta > 0
+```
+```math
+x'' = \frac{-b - \sqrt{\Delta}}{2a}, \quad \text{quando } \Delta > 0
+```
+
+- Em haskell é definida dessa forma:
+```haskell
+bhaskara a b c
+    | delta < 0 = []
+    | delta == 0 = [x]
+    | otherwise = [x', x'']
+    where
+        delta = b^2 - 4*a*c
+        x = -b / (2*a)
+        x' = (-b + sqrt delta) / ( 2 * a )
+        x'' = (-b - sqrt delta) / ( 2 * a )
+```
+Não tem o que explicar, é literalmente o que é definido matematicamente é definido no haskell
 
 
