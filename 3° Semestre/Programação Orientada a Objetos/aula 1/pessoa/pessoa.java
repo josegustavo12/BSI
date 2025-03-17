@@ -1,5 +1,6 @@
-// Estudo sobre class
+package pessoa;
 
+// Estudo sobre class
 public class pessoa {
 
     // atributos (propriedades)

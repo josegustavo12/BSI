@@ -210,6 +210,173 @@ public class main {
     }   
 }
 ```
+
+## Aula 2
+### UML
+UML (Unified Modeling Language) é uma linguagem de modelagem padronizada utilizada na engenharia de software para visualizar, especificar, construir e documentar sistemas complexos. Ela fornece um conjunto de diagramas que representam diferentes aspectos de um sistema, como estrutura, comportamento e interações entre os componentes. Criada para padronizar a comunicação entre desenvolvedores, arquitetos de software e stakeholders, a UML é amplamente usada no desenvolvimento de software orientado a objetos, auxiliando na concepção e documentação de sistemas de forma clara e compreensível.
+
+- Por que modelar um sistema?
+  - Sistemas são complexos; é necessário decompô-los em pedaço compreensíveis abstraindo-se aspectos essenciais;
+  - Diagramas auxiliam no entendimento do problema;
+  - Linguagem comum que permite aos desenvolvedores entender quais objetos fazem parte do sistema e como se comunicam;
+  - O modelo induz ao projeto: previsão das necessidades, problemas, e limitações.
+
+
+
+### Diagramas UML
+- **Diagrama de classes:** O mais utilizado
+  - Objetivo: visualização dos respectivos atributos e métodos, bem como relacionamentos entre classes
+  - Visão estática do sistema
+  - Estrutura lógica:
+    - Classes, asssociações, interfaces e etc.
+  - **Classe:** uma classe possui a notação de um retângulo dividido em três partes:
+    1. Nome;
+    2. Atributos;
+    3. Métodos;
+    - Exemplo:
+    
+    ![](data/diagramadeclasses1.png)
+- - -
+- Forma completa de um **atributo**:
+```
+visibilidade nome: tipo = valor_inicial {propriedades}
+```
+- Visibilidade: public (+), private (-). protected(#)
+- Tipo do atributo: int, float, double, String, Date ...
+- Valor inicial
+- Propriedades: read-only, const, static e etc
+- Exemplos:
+  - '-' sNome: String = null
+  - '+' PI: double = 3.13 {const}
+  - '#' e: float = {static, final}
+```java
+class Pessoa {
+    String nome;  // Atributo
+    int idade;    // Atributo
+}
+```
+- **Resumindo:** Atributos são variáveis dentro de uma classe que guardam informações sobre um objeto.
+- - - 
+- Forma completa de um **método:**
+```
+visibilidade nome (tipo_param) : tipo_retorno {propriedades}
+```
+- Visibilidade: public (+), private (-). protected(#)
+- Tipo do parâmetro/retorno: ex: int, float, double, String, Date ...
+- Propriedades: ex.: const, abstract, static
+- Exemplos:
+  - '+' getNome() : void {abstract}
+  - '-' calcularArea(double) : float
+  - '+' calculaPotencia(double, double) : double {const}
+```java
+class Pessoa {
+    String nome;
+    int idade;
+
+    void apresentar() {  // Método
+        System.out.println("Olá, meu nome é " + nome);
+    }
+}
+```
+- **Resumindo:** Métodos são funções dentro da classe que definem comportamentos.
+- - -
+### Relacionamentos
+- Quando há um relacionamento entre duas classes?
+  - quando o nome de uma classe aparece no código de outra classe
+
+#### Tipos de relacionamentos
+- Associação simples - "usa"
+  - A associação indica que uma classe se relaciona com outra, mas sem dependência forte entre elas.
+  - **Exemplo:**  Um Aluno está associado a um Professor, pois um professor pode ensinar vários alunos e um aluno pode ter vários professores.
+```java
+  class Aluno {
+    String nome;
+    Professor professor;  // Associação
+}
+class Professor {
+    String nome;
+}
+- - -
+```
+- Agregação - "é parte de" (possui)
+  - A agregação é um tipo especial de associação onde uma classe contém outra, mas as partes podem existir independentemente.
+  - **Exemplo:** Uma Turma contém vários Alunos, mas um Aluno pode existir sem uma Turma
+```java
+class Aluno {
+    String nome;
+}
+class Turma {
+    List<Aluno> alunos; // Agregação
+}
+```
+- - -
+- Composição:
+  - A composição é uma relação mais forte que a agregação. Aqui, se a classe contêiner for destruída, as partes também são.
+  - **Exemplo:** Um Carro tem um Motor, e se o Carro deixar de existir, o Motor também deixa.
+```java
+class Motor {
+    String tipo;
+}
+class Carro {
+    private Motor motor = new Motor(); // Composição
+}
+```
+- Generalização - "é um"
+  - uma **relação hierárquica** entre classes, onde uma classe mais genérica (superclasse) é estendida por classes mais específicas (subclasses).
+
+---
+
+- **características da Generalização**
+
+  - **Herança** → A classe filha herda atributos e métodos da classe pai.  
+  - **Reutilização de Código** → Evita repetição de código ao definir características comuns na superclasse.  
+  - **Relacionamento "é um"** → A classe filha **é um** tipo da classe pai.  
+  - **Especialização** → A subclasse pode ter atributos e métodos próprios além dos herdados.  
+
+A **Generalização** é representada por uma seta com ponta vazada apontando para a **classe mais genérica**.
+
+```
+       Animal
+         ▲
+         │
+ ┌────────────┐
+ │            │
+Cachorro    Gato
+```
+Aqui, tanto **Cachorro** quanto **Gato** são **tipos de Animal**, logo eles herdam seus atributos e métodos.
+
+```java
+// Superclasse (Generalização)
+class Animal {
+    String nome;
+    
+    void fazerSom() {
+        System.out.println("O animal faz um som.");
+    }
+}
+
+// Subclasse Cachorro (Especialização)
+class Cachorro extends Animal {
+    void fazerSom() {
+        System.out.println("Au Au!");
+    }
+}
+
+// Subclasse Gato (Especialização)
+class Gato extends Animal {
+    void fazerSom() {
+        System.out.println("Miau!");
+    }
+}
+```
+**Explicação:**  
+- `Animal` é a **classe pai** (superclasse), contendo atributos e métodos comuns.  
+- `Cachorro` e `Gato` são **subclasses** e herdam `nome` e `fazerSom()` de `Animal`, mas cada um pode ter um comportamento específico.  
+---
+### **Em resumo**
+![](data/slide_17_POO_UML.png)
+
+
 # Algoritmo e Estrutura de Dados II
 
 ## Aula 1
