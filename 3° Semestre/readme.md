@@ -143,9 +143,359 @@ pdf
     - Instruções especiais em hardware;
     - Troca de mensagens;
   
+- - - 
+### **Gerenciamento de memória:**
+- Gerenciamento elementar (decada de 60):
+  - Sistema monoprogramado; 
+  - sem paginação; 
+  - **apenas** um processo na memória; 
+  - acesso a toda a memória
+- Gerenciamento mais avançado (atual)
+  - sistema multiprogramado;
+  - Mais de um processo na memória;
+  - chaveamento de processos: troca de processos devido a entrada/saída ou por limite de tempo
+- **Partições fixas:**
+  - cada processo é alocado em uma dada partição da memória (pré-definida)
+  - Partições são liberadas quando o processo termina
+- **Partições variáveis:**
+  - Memória é alocada de acordo com o tamanho e o numero  de processos
+  - otimiza o uso de memória
 
-- **Memória:**
-- **Chamadas ao Sistema:**
+- - - 
+### **Chamadas ao Sistema (system calls):**
+- **Interface** entre o Sistema Operacional e os programas do usuário
+- As chamadas diferem de SO para SO, no entanto, os conceitos relacionados às chamadas são similares independente do SO
+- **Apenas** uma chamada de sistema pode ser realizada em um instante de tempo (ciclo de relógio) pela CPU
+  - O Conceito de Apenas Uma Chamada por Ciclo de Relógio A CPU segue o ciclo de instrução:
+
+    1. Busca (Fetch) - Obtém a instrução da memória.
+    2. Decodificação (Decode) - Interpreta a instrução.
+    3. Execução (Execute) - Realiza a operação necessária.
+  - Quando um programa chama uma system call:
+    1. A CPU pausa a execução normal do programa do usuário.
+    2. Alterna para modo kernel.
+    3. Executa a chamada de sistema no SO.
+    4. Retorna ao modo usuário para continuar o programa.
+- **Interfaces de um SO:**
+  - Interação usuário - SO: shell ou interpretador de comandos
+  - Interação programas - SO: Chamadas ao sistema
+
+- - -
+### Conceitos básicos das **chamadas ao sistema:**
+- Modo de acesso
+  - Usuário;
+  - Kernel ou Supervisor ou Núcleo;
+- São determinados por um conjunto de bits localizados no registrador de status do processador (PSW - Program Status Word)
+  - Esse registrador funciona como um "autenticador" da instruçãi se ela pode ou não ser executada pela aplicação
+- Protege o próprio kernel do Sistema Operacional na RAM contra acessos indevidos;
+
+- - -
+### **Modos de Execução da CPU: Modo Usuário vs. Modo Kernel**
+
+Os **modos de execução** são fundamentais para garantir a segurança e estabilidade dos sistemas computacionais. A CPU pode operar em dois modos distintos:
+
+1. **Modo Usuário (User Mode)** → Aplicações comuns rodam aqui.
+2. **Modo Kernel (Kernel Mode)** → Apenas o Sistema Operacional (SO) tem acesso.
+
+### **1. Modo Usuário (User Mode)**
+Quando um programa comum (como um navegador, editor de texto ou jogo) está sendo executado, ele roda no **modo usuário**, o que significa que:
+- Não pode acessar diretamente o **hardware** (disco, memória, dispositivos de entrada/saída).
+- Tem um **conjunto limitado de instruções** para evitar operações perigosas.
+- Se precisar acessar recursos do sistema, **deve solicitar ao SO** através de chamadas de sistema (System Calls).
+
+#### **Exemplo no Modo Usuário**
+Imagine que um programa tente acessar diretamente um arquivo do disco rígido:
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *arquivo;
+    arquivo = fopen("dados.txt", "r"); // Tentativa de abrir um arquivo
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return 1;
+    }
+
+    printf("Arquivo aberto com sucesso!\n");
+    fclose(arquivo);
+    return 0;
+}
+```
+---
+
+### **2. Modo Kernel (Kernel Mode)**
+No **modo kernel**, o processador pode executar **todas as instruções**, incluindo as privilegiadas. Somente o **Sistema Operacional** pode operar nesse modo, pois ele gerencia:
+- Acesso ao **hardware** (CPU, memória, dispositivos).
+- **Gerenciamento de processos e memória**.
+- **Operações críticas**, como interrupções e troca de contexto.
+
+#### **Exemplo no Modo Kernel**
+Quando o programa do exemplo anterior chama `fopen()`, o SO executa chamadas como `open()`, `read()`, `write()`, que são **operações feitas no modo kernel**.  
+Um exemplo direto de código que roda no modo kernel seria um **módulo de driver no Linux**:
+
+```c
+#include <linux/module.h>
+#include <linux/kernel.h>
+
+int init_module(void) {
+    printk(KERN_INFO "Módulo carregado: modo kernel ativado!\n");
+    return 0;
+}
+
+void cleanup_module(void) {
+    printk(KERN_INFO "Módulo removido: voltando ao modo usuário.\n");
+}
+```  
+- Esse código é um **módulo de kernel** que roda dentro do SO.
+- Ele pode acessar diretamente **hardware e recursos críticos**.
+- Só pode ser executado por um usuário com privilégios elevados (**root**).
+
+---
+
+### **3. Como a Transição Entre os Modos Ocorre?**
+O SO alterna entre **modo usuário** e **modo kernel** por meio de:
+- **Interrupções** (exemplo: teclado pressionado).
+- **Exceções** (erro de acesso à memória).
+- **Chamadas de sistema (System Calls)**.
+
+- **Exemplo de transição entre os modos:**
+  - Quando um usuário digita `ls` no terminal:
+    1. O **processo ls** começa no **modo usuário**.
+    2. Para acessar os arquivos, ele chama `open()`, que faz uma **chamada de sistema**.
+    3. O **SO entra no modo kernel** e busca os dados no disco.
+    4. Os dados são retornados ao processo `ls`, que continua no **modo usuário**.
+
+---
+
+### **Resumo**
+| Característica | Modo Usuário | Modo Kernel |
+|--------------|-------------|-------------|
+| **Quem opera?** | Programas de usuário | Sistema Operacional |
+| **Acesso ao hardware?** | Não | Sim |
+| **Instruções privilegiadas?** | Não | Sim |
+| **Segurança** | Restrito | Controle total |
+| **Exemplo** | Abrir um arquivo (`fopen()`) | Gerenciar memória (`malloc()` chama `brk()` no SO) |
+
+![](data/chamadas_ao_sistema1.png)
+
+### **Chamadas ao Sistema e a Instrução TRAP**
+
+A instrução **TRAP** é um mecanismo essencial que permite a transição do **modo usuário** para o **modo kernel**, permitindo que um programa solicite serviços do sistema operacional de maneira segura.  
+
+- É uma **instrução especial** usada para realizar **chamadas de sistema** (System Calls).
+- Permite que um programa de usuário solicite ao sistema operacional a execução de operações privilegiadas, como leitura e escrita em arquivos, alocação de memória, ou comunicação com dispositivos de hardware.
+- Quando a CPU encontra uma **instrução TRAP**, ela interrompe a execução do programa em modo usuário e transfere o controle para o SO, que opera em **modo kernel**.
+
+---
+
+- **Exemplo - System Call `read()`**
+```c
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    int fd;
+    char buffer[100];
+    
+    // Abrindo um arquivo
+    fd = open("exemplo.txt", O_RDONLY);
+    if (fd == -1) {
+        perror("Erro ao abrir o arquivo");
+        return 1;
+    }
+
+    // Lendo o arquivo
+    ssize_t bytesLidos = read(fd, buffer, sizeof(buffer));  // Chamada de sistema read()
+
+    if (bytesLidos == -1) {
+        perror("Erro ao ler o arquivo");
+    } else {
+        printf("Dados lidos: %s\n", buffer);
+    }
+
+    close(fd);
+    return 0;
+}
+```
+----
+#### **Explicação do Funcionamento da System Call `read()`**
+1. **O programa do usuário chama `read(fd, buffer, nbytes)`**:
+   - `fd` → Identificador do arquivo.
+   - `buffer` → Ponteiro para armazenar os dados lidos.
+   - `nbytes` → Número de bytes a serem lidos.
+
+2. **Empilhamento dos Argumentos (Stack Frame)**
+   - O compilador converte `read(fd, buffer, nbytes)` em uma chamada de sistema.
+   - Os argumentos são **empilhados na pilha da CPU**:
+     - `fd` (descritor do arquivo)
+     - `&buffer` (endereço do buffer onde os dados serão armazenados)
+     - `nbytes` (quantidade de bytes a serem lidos)
+
+3. **Registro do Código da System Call**
+   - O código numérico correspondente à chamada `read()` é armazenado em um **registrador** especial da CPU.
+
+4. **Instrução TRAP**
+   - A CPU executa a instrução **TRAP**, que transfere o controle para o **kernel**.
+
+5. **Modo Kernel e Execução pelo SO**
+   - O sistema operacional verifica os parâmetros.
+   - Acessa o **sistema de arquivos** e lê os dados solicitados.
+   - Copia os dados lidos para o **buffer do usuário**.
+
+6. **Retorno ao Modo Usuário**
+   - O kernel retorna o número de bytes lidos e volta para o **modo usuário**.
+   - O programa continua sua execução.
+
+---
+
+- **Chamada `read()` via TRAP**
+
+| Etapa | Ação |
+|-------|------|
+| **1** | O programa empilha os argumentos (`fd`, `&buffer`, `nbytes`). |
+| **2** | O código da system call `read()` é armazenado em um registrador. |
+| **3** | O programa executa a instrução **TRAP**. |
+| **4** | O controle é transferido para o **modo kernel**. |
+| **5** | O SO executa a operação de leitura no arquivo. |
+| **6** | O número de bytes lidos é retornado. |
+| **7** | O processo volta ao **modo usuário** e continua a execução. |
+
+---
+
+## Aula 3
+
+### Estrutura de Sistemas Operacionais
+- Pode atuar de duas maneiras diferentes:
+  - Maquina estendida: 
+    - chamadas ao Sistema - Interface
+    - Parte externa
+  - Gerenciador de recursos
+    - Parte interna
+- - -
+- baseados em Kernel (núcleo)
+  - Kernel é o núcleo do sistema operacional
+  - Provê um conjunto de funcionalidades e serviços que suportam várias outras funcionalidades do SO
+  - O restante do SO é organizado em conjunto de rotinas não-kernel
+
+  ![](data/interface-rotinas-kernel.png)
+
+- Principais tipos de estruturas:
+  - Monolíticos;
+  - Em camadas
+  - Máquinas Virtuais
+  - Arquitetura Micro-Kernel
+  - Cliente-Servidor
+
+## **Tipos de Arquitetura de Sistemas Operacionais**  
+
+Os **Sistemas Operacionais (SO)** podem ser classificados com base na sua **arquitetura interna**. Cada modelo define como os componentes do sistema interagem e executam as funções do SO.  
+
+---
+
+### **Sistemas Monolíticos**  
+- **Definição**:  
+  - O **núcleo (kernel)** é um bloco único e grande onde **todos os serviços do SO** estão integrados (gerenciamento de processos, memória, arquivos, etc.).  
+  - Comunicação interna ocorre através de **chamadas diretas de funções**.  
+
+- **Vantagens**:  
+  - Alto desempenho, pois não há muita troca de contexto.  
+  - Simples de implementar.  
+
+- **Desvantagens**:  
+  - Difícil de modificar ou atualizar, pois qualquer mudança exige recompilar todo o SO.  
+  - Falha em um módulo pode derrubar o sistema inteiro.  
+
+- **Exemplo de Sistemas**:  
+  - **Linux**  
+  - **Windows 95, 98, ME**  
+  - **Unix tradicional**  
+
+- - -
+### **Sistemas em Camadas**  
+- **Definição**:  
+  - O SO é organizado em **múltiplas camadas**, onde cada uma **depende apenas da camada abaixo**.  
+  - Cada camada tem uma **função específica** (hardware, drivers, gerenciamento de memória, interface do usuário).  
+
+- **Vantagens**:  
+  - Melhor **organização e modularidade**.  
+  - **Facilidade de manutenção**, pois cada camada pode ser modificada separadamente.  
+
+- **Desvantagens**:  
+  - Comunicação entre camadas pode **causar perda de desempenho**.  
+
+- **Exemplo de Sistemas**:  
+  - **THE OS (primeiro sistema baseado em camadas)**  
+  - **MULTICS**  
+---
+
+### **Sistemas Baseados em Máquinas Virtuais**  
+- **Definição**:  
+  - Criam uma **simulação de hardware** para rodar múltiplos sistemas operacionais ao mesmo tempo.  
+  - Cada SO acredita estar rodando diretamente no hardware, mas na verdade opera dentro de uma máquina virtual.  
+
+- **Vantagens**:  
+  - Permite rodar **vários SOs em um mesmo hardware**.  
+  - Excelente para **testes e desenvolvimento**.  
+
+- **Desvantagens**:  
+  - Pode ter **perda de desempenho** devido à sobrecarga da virtualização.  
+
+- **Exemplo de Sistemas**:  
+  - **VMware, VirtualBox, Hyper-V**  
+  - **Java Virtual Machine (JVM) → Simula uma máquina para rodar programas Java**  
+---
+
+### **Arquitetura Microkernel**  
+- **Definição**:  
+  - O **núcleo do sistema operacional é mínimo** e só gerencia funções essenciais (memória, processos, comunicação).  
+  - Serviços adicionais, como drivers e sistemas de arquivos, rodam no **modo usuário** e se comunicam via **mensagens**.  
+
+- **Vantagens**:  
+  - Mais **seguro** e estável, pois falhas em módulos não derrubam o SO inteiro.  
+  - Fácil de expandir e modificar.  
+
+- **Desvantagens**:  
+  - **Desempenho reduzido** devido à necessidade de comunicação via mensagens entre processos.  
+
+- **Exemplo de Sistemas**:  
+  - **Minix**  
+  - **QNX**  
+  - **MacOS X (usa parte da arquitetura microkernel - Mach)**  
+
+---
+
+### **Arquitetura Cliente-Servidor**  
+- **Definição**:  
+  - O SO é dividido em **clientes e servidores**.  
+  - Os **clientes** fazem requisições, e os **servidores** fornecem serviços (como arquivos, impressão, autenticação).  
+  - Pode ser implementado tanto **localmente** quanto em **rede**.  
+
+- **Vantagens**:  
+  - Melhor **distribuição de carga** e escalabilidade.  
+  - Um problema em um servidor não compromete o resto do sistema.  
+
+- **Desvantagens**:  
+  - Se o **servidor falhar**, os clientes podem ficar sem serviço.  
+
+- **Exemplo de Sistemas**:  
+  - **Windows NT (modelo híbrido de microkernel e cliente-servidor)**  
+  - **Linux em Monolítico + Módulos**  
+
+---
+
+#### **Resumo Geral**
+| Arquitetura | Características | Exemplo de SO |
+|------------|----------------|--------------|
+| **Monolítico** | Tudo no mesmo núcleo | Linux, Unix, Windows 98 |
+| **Em Camadas** | Dividido por níveis | THE OS, MULTICS |
+| **Máquinas Virtuais** | Simulação de hardware | VMware, VirtualBox, JVM |
+| **Microkernel** | Apenas funções mínimas no núcleo | Minix, QNX, macOS (Mach) |
+| **Cliente-Servidor** | Divisão entre processos clientes e servidores | Windows NT, Linux |
+
+Se precisar de mais detalhes ou quiser outro exemplo, me avise! 🚀
 
 
 
@@ -765,7 +1115,7 @@ x =
 \Delta = b² - 4ac
 ```
 ```math
-\frac{-b}{2a}, \quad \text{A unida solução é } \Delta = 0\
+\frac{-b}{2a}, \quad \text{A unida solução é } \Delta = 0
 ```
 
 
