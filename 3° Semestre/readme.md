@@ -389,7 +389,7 @@ int main() {
   - Arquitetura Micro-Kernel
   - Cliente-Servidor
 
-## **Tipos de Arquitetura de Sistemas Operacionais**  
+### **Tipos de Arquitetura de Sistemas Operacionais**  
 
 Os **Sistemas Operacionais (SO)** podem ser classificados com base na sua **arquitetura interna**. Cada modelo define como os componentes do sistema interagem e executam as funções do SO.  
 
@@ -463,7 +463,11 @@ Os **Sistemas Operacionais (SO)** podem ser classificados com base na sua **arqu
 - **Exemplo de Sistemas**:  
   - **Minix**  
   - **QNX**  
-  - **MacOS X (usa parte da arquitetura microkernel - Mach)**  
+  - **MacOS X (usa parte da arquitetura microkernel - Mach)**
+
+## Aula 4
+### Processos - Introdução
+
 
 ---
 
@@ -1141,3 +1145,5 @@ bhaskara a b c
 Não tem o que explicar, é literalmente o que é definido matematicamente é definido no haskell
 
 
+## Aula 4
+ ver sobre curry
