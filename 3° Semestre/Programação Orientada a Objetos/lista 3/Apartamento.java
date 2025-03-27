@@ -11,7 +11,7 @@ public class Apartamento extends Moradia{
     }
 
     public void MostrarApartamento(){
-        System.out.println("APARTAMENTO");
+        System.out.println("\n\nAPARTAMENTO");
         MostrarDetalhes();
         if (varanda == true){
             System.out.println("Numero: " + numero + "\nComodos: " + comodos + "\nVaranda: Sim");

@@ -37,10 +37,28 @@ public class Main {
         casa1.MostrarCasa();
 
         Pessoa ap1 = new Pessoa ("Roberta", 23, "Feminina");
+        Pessoa ap2 = new Pessoa ("Roberto", 25, "Masculino");
+        Pessoa ap3 = new Pessoa ("Roberval", 27, "Masculino");
 
-        Apartamento apto1 = new Apartamento("Rua Fátima", ap1, 2, "130", 3, true);
+        Apartamento apto1 = new Apartamento("Rua Fátima", ap1, 2, "13", 3, true);
+        Apartamento apto2 = new Apartamento("Rua Fátima", ap2, 2, "14", 3, true);
+        Apartamento apto3 = new Apartamento("Rua Fátima", ap3, 2, "15", 3, true);
+        
+        Pessoa ap12 = new Pessoa ("Carla", 25, "Feminina");
+        Pessoa ap22 = new Pessoa ("Carlos", 27, "Masculino");
+        Pessoa ap32 = new Pessoa ("Carla", 29, "Feminina");
 
-        apto1.MostrarApartamento();
+        apto1.adicionarMorador(ap12);
+        apto2.adicionarMorador(ap22);
+        apto3.adicionarMorador(ap32);
+        
+        Predio predio = new Predio("Rua Fátima", m1, 3);
+
+        predio.AdicionarApartamento(apto1);
+        predio.AdicionarApartamento(apto2);
+        predio.AdicionarApartamento(apto3);
+
+        predio.MostrarPredio();
 
     }
 }
