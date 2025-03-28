@@ -114,8 +114,8 @@ pdf
         - Pode ser interrompido pelo sistema operacional para dar lugar a outro processo.
 
       - **Bloqueado:** 
-        - O processo está esperando por um evento externo, como uma operação de entrada/saída (E/S) ser concluída.
-        - Não pode continuar a execução até que o evento pelo qual está esperando ocorra.
+        - O processo está esperando por um parto externo, como uma operação de entrada/saída (E/S) ser concluída.
+        - Não pode continuar a execução até que o parto pelo qual está esperando ocorra.
         - **Exemplo:**
      Quando o SO suspende um processo P1 temporariamente
      para executar um processo P2, o processo P1 deve ser
@@ -993,7 +993,7 @@ dobro = map (*2) numeros -- [2, 4, 6, 8, 10]
 
 - **Filtragem de listas (`filter`)**
 ```haskell
-pares = filter even numeros -- [2, 4]
+pares = filter par numeros -- [2, 4]
 ```
 
 - A lista **tem que ter** um tipo, por ex:
@@ -1149,3 +1149,437 @@ Não tem o que explicar, é literalmente o que é definido matematicamente é de
 
 ## Aula 4
  ver sobre curry
+
+## Aula 5
+
+### Funções Prefixas e Infixas em Haskell
+
+#### 1. **Prefixo**: função antes dos argumentos
+
+Esse é o formato padrão das funções em Haskell. A função aparece antes dos seus argumentos.
+
+```haskell
+soma a b = a + b
+
+main = print (soma 2 3)  -- chamada prefixa
+```
+
+Qualquer função pode ser chamada assim, inclusive operadores, colocando-os entre parênteses:
+
+```haskell
+(+) 2 3  -- operador + chamado como função prefixa
+```
+
+---
+
+### 2. **Infixo**: função entre os argumentos
+
+Usamos essa forma geralmente para operadores:
+
+```haskell
+2 + 3  -- chamada infixa
+```
+
+Mas também podemos usar funções comuns como infixas, colocando crases ao redor do nome da função:
+
+```haskell
+mod 10 3      -- chamada prefixa
+10 `mod` 3    -- chamada infixa equivalente
+```
+
+---
+
+### Transformando Prefixo em Infixo e vice-versa
+
+#### De prefixo para infixo
+
+Se você tem uma função comum:
+
+```haskell
+dividir a b = a / b
+```
+
+Você pode usá-la como infixa com crases:
+
+```haskell
+10 `dividir` 2
+```
+
+#### De infixo para prefixo
+
+Se você tem um operador:
+
+```haskell
+a *-* b = a * 2 + b * 3
+```
+
+Você pode usá-lo como função prefixa com parênteses:
+
+```haskell
+(*-*) 4 5
+```
+
+---
+
+#### Criando operadores infixos personalizados
+
+Você pode criar operadores usando apenas símbolos:
+
+```haskell
+a <+> b = a + b + 1
+```
+
+E pode também definir sua **precedência e associatividade**:
+
+```haskell
+infixl 6 <+>   -- associativo à esquerda, mesma precedência que +
+```
+
+Essa declaração define como o operador se comporta quando combinado com outros.
+
+---
+
+#### Tabela de resumo
+
+| Forma         | Sintaxe                   | Exemplo                |
+|---------------|---------------------------|------------------------|
+| Prefixa       | `f a b`                   | `mod 10 3`             |
+| Infixa        | `a `f` b`                 | `10 `mod` 3`           |
+| Infixa (símb.)| `a <+> b`                 | `4 *-* 5`              |
+| Prefixa (op)  | `(<+>) a b`               | `(*-*) 4 5`            |
+
+---
+
+Claro, aqui vai um **resumo direto e claro** da função `mapa`:
+
+---
+
+### Função map ou mapa
+
+```haskell
+mapa :: (a -> b) -> [a] -> [b]
+mapa _ [] = []
+mapa f (x:xs) = f x : mapa f xs
+```
+
+A função `mapa` aplica uma função `f` **a cada elemento de uma lista**, devolvendo uma nova lista com os resultados.
+
+---
+- **Funcionamento:**
+  1. **Caso base:**  
+    Se a lista é vazia, retorna `[]`.
+
+  2. **Caso recursivo:**  
+    Se a lista tem elementos `(x:xs)`:
+      - Aplica `f` no primeiro (`f x`)
+      - Junta com o resultado da recursão no resto: `f x : mapa f xs`
+
+---
+
+#### Exemplo
+
+```haskell
+mapa (*2) [1,2,3]  
+-- Resultado: [2,4,6]
+```
+
+---
+
+#### Equivalente à função padrão `map`:
+
+```haskell
+map == mapa
+```
+
+---
+
+
+Ótimo! Vamos explicar cada uma das três funções Haskell que você trouxe: `filtra`, `soma` e `pega`. Todas são escritas de forma recursiva e operam sobre listas. Abaixo está a explicação de cada uma, com exemplos.
+
+---
+
+### **Função `filtra`**
+
+```haskell
+filtra :: (a -> Bool) -> [a] -> [a]
+filtra _ [] = []
+filtra teste (x:xs)
+    | teste x   = x : filtra teste xs
+    | otherwise = filtra teste xs
+```
+A função `filtra` seleciona apenas os elementos de uma lista que satisfazem uma condição (função booleana `teste`). É equivalente à função padrão `filter`.
+
+#### Passo a passo (exemplo):
+
+```haskell
+filtra par [1,2,3,4]
+```
+
+1. `par 1` → False → não inclui 1  
+2. `par 2` → True  → inclui 2  
+3. `par 3` → False → não inclui 3  
+4. `par 4` → True  → inclui 4  
+
+**Resultado:** `[2,4]`
+
+---
+
+### **Função `soma`**
+
+```haskell
+soma :: [Integer] -> Integer
+soma [] = 0
+soma (x:xs) = x + soma xs
+```
+A função `soma` calcula a soma de todos os elementos de uma lista de inteiros.
+
+#### Passo a passo (exemplo):
+
+```haskell
+soma [3, 5, 2]
+```
+
+1. `3 + soma [5,2]`  
+2. `3 + (5 + soma [2])`  
+3. `3 + (5 + (2 + soma []))`  
+4. `soma [] = 0`  
+
+Resultado: `3 + 5 + 2 = 10`
+
+---
+
+### **Função `pega`**
+
+```haskell
+pega _ [] = []
+pega 0 _ = []
+pega n (x:xs) = x : pega (n-1) xs 
+```
+A função `pega` retorna os **n primeiros elementos** de uma lista. É equivalente à função padrão `take`.
+
+#### Passo a passo (exemplo):
+
+```haskell
+pega 3 [10,20,30,40,50]
+```
+
+1. `10 : pega 2 [20,30,40,50]`  
+2. `10 : 20 : pega 1 [30,40,50]`  
+3. `10 : 20 : 30 : pega 0 [40,50]`  
+4. `pega 0 _ = []`  
+
+**Resultado:** `[10, 20, 30]`
+
+---
+
+### Declaração de tipos
+
+```haskell
+soma :: (Num a) => [a] -> a
+```
+
+---
+É a **assinatura de tipo** da função `soma` em Haskell. Ela diz **quais tipos são permitidos** nessa função. Vamos analisar.
+
+---
+
+#### Que parte é o *contexto*?
+
+```haskell
+(Num a) => ...
+```
+
+Essa parte é chamada de **contexto**.
+
+- Significa:  
+  - “O tipo `a` deve pertencer à *type class* `Num`”.
+
+---
+
+#### O que é uma *type class*?
+
+Uma **type class** em Haskell é uma coleção de tipos que têm certas operações definidas. É como um “contrato de comportamento”.
+- - -
+
+A `Num` é a type class dos **números**, ou seja, tipos que suportam:
+
+- `+`, `-`, `*`, `abs`, `signum`, `fromInteger`, etc.
+
+Alguns exemplos de tipos que pertencem à type class `Num`:
+
+- `Int`
+- `Integer`
+- `Float`
+- `Double`
+Claro! Aqui está, no **mesmo formato**, uma descrição das principais type classes em Haskell, assim como você pediu.
+
+---
+A `Eq` é a type class dos **tipos comparáveis por igualdade**, ou seja, tipos que suportam:
+
+- `==`, `/=`
+
+Alguns exemplos de tipos que pertencem à type class `Eq`:
+
+- `Int`  
+- `Char`  
+- `Bool`  
+- `String`  
+- Qualquer tipo que derive `Eq` com `deriving (Eq)`
+
+---
+A `Ord` é a type class dos **tipos ordenáveis**, ou seja, tipos que suportam:
+
+- `<`, `<=`, `>`, `>=`, `compare`, `max`, `min`
+
+Alguns exemplos de tipos que pertencem à type class `Ord`:
+
+- `Int`  
+- `Char`  
+- `Bool`  
+- `String`  
+- Qualquer tipo que derive `Ord` com `deriving (Ord)`
+
+---
+A `Show` é a type class dos **tipos que podem ser convertidos para `String`**, ou seja, tipos que suportam:
+
+- `show`
+
+Alguns exemplos de tipos que pertencem à type class `Show`:
+
+- `Int`  
+- `Float`  
+- `Char`  
+- `Bool`  
+- `String`  
+- Qualquer tipo que derive `Show` com `deriving (Show)`
+
+---
+A `Read` é a type class dos **tipos que podem ser convertidos de `String`**, ou seja, tipos que suportam:
+
+- `read`
+
+Alguns exemplos de tipos que pertencem à type class `Read`:
+
+- `Int`  
+- `Float`  
+- `Char`  
+- `Bool`  
+- `String`  
+- Qualquer tipo que derive `Read` com `deriving (Read)`
+
+---
+A `Enum` é a type class dos **tipos enumeráveis**, ou seja, tipos que suportam:
+
+- `succ`, `pred`, `toEnum`, `fromEnum`, enumeração com `..`
+
+Alguns exemplos de tipos que pertencem à type class `Enum`:
+
+- `Int`  
+- `Char`  
+- `Bool`  
+- Tipos definidos com `data` que têm construtores em sequência
+
+---
+
+A `Bounded` é a type class dos **tipos com limites bem definidos**, ou seja, tipos que suportam:
+
+- `minBound`, `maxBound`
+
+Alguns exemplos de tipos que pertencem à type class `Bounded`:
+
+- `Int`  
+- `Char`  
+- `Bool`  
+- Tipos enumerados simples com `deriving (Bounded)`
+
+---
+
+## Interpretando a assinatura
+
+```haskell
+soma :: (Num a) => [a] -> a
+```
+
+Quer dizer:
+
+- A função `soma` recebe uma lista de elementos do tipo `a` (ou seja, `[a]`) e retorna um valor do tipo `a`.  
+
+- Mas isso **só é permitido se `a` for uma instância da type class `Num`**.
+---
+
+Claro! Vamos explicar as duas funções que você trouxe — `pertence` e `qs` (quicksort) — **nos mesmos moldes que usei antes para `soma`, `pega`, `filtra`**: com definição, explicação passo a passo, e exemplo.
+
+---
+
+### **Função `pertence`**
+
+```haskell
+pertence :: Eq a => a -> [a] -> Bool
+_ `pertence` [] = False
+e `pertence` (x:xs)
+    | e == x = True
+    | otherwise = e `pertence` xs
+```
+Verifica se um elemento está presente em uma lista. Retorna `True` se encontrar, e `False` caso contrário.
+
+#### Contexto de tipo:
+
+```haskell
+Eq a => ...
+```
+
+- Isso exige que o tipo `a` seja comparável com `==`, ou seja, que seja da **type class `Eq`**.
+
+#### Passo a passo (exemplo):
+
+```haskell
+3 `pertence` [1,2,3,4]
+```
+
+1. `3 == 1` → False → verifica na cauda: `3 `pertence` [2,3,4]`  
+2. `3 == 2` → False → verifica na cauda: `3 `pertence` [3,4]`  
+3. `3 == 3` → True → retorna `True`
+
+**Resultado final:** `True`
+
+---
+
+### **Função `qs` — Quicksort**
+
+```haskell
+qs [] = []
+qs (pivo:xs) = menores ++ iguais ++ maiores
+    where
+        menores = qs $ filtra (< pivo) xs
+        iguais = pivo : filtra (== pivo) xs
+        maiores = qs $ filtra (> pivo) xs
+```
+Ordena uma lista usando o algoritmo **quicksort**, com estilo funcional. A ideia é:
+
+1. Escolher um `pivo`.
+2. Dividir o resto da lista em:
+   - menores que o `pivo`
+   - iguais ao `pivo`
+   - maiores que o `pivo`
+3. Ordenar recursivamente os menores e maiores.
+4. Juntar tudo: menores ++ iguais ++ maiores.
+
+#### Passo a passo (exemplo):
+
+```haskell
+qs [3,1,4,2]
+```
+
+1. **Pivô:** `3`
+2. `menores` = `qs [1,2]`
+   - pivô: `1`
+     - menores = `[]`
+     - iguais = `[1]`
+     - maiores = `qs [2]` → `[2]`
+   - resultado: `[] ++ [1] ++ [2] = [1,2]`
+3. `iguais` = `[3]`
+4. `maiores` = `qs [4]` → `[4]`
+
+**Resultado final:** `[1,2] ++ [3] ++ [4] = [1,2,3,4]`
+
+---
