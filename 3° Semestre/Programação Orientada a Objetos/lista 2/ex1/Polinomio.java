@@ -1,6 +1,6 @@
 public class Polinomio {
 
-    private Termo termos[];
+    private Termo termos[]; 
     private int grau_max;
 
     // Controla quantos termos já foram adicionados
