@@ -1583,3 +1583,65 @@ qs [3,1,4,2]
 **Resultado final:** `[1,2] ++ [3] ++ [4] = [1,2,3,4]`
 
 ---
+
+## Aula 7
+
+### A essência de programação funcional
+
+#### 1. **Função de primeira classe(first-class function):**
+- As funções são tratadas como valores, ou seja, elas podem ser
+  - Atribuídas as variáveis;
+  - Passadas como argumentos para outras funções;
+  - Retornadas como resultado de funções.
+
+- **Exemplo em haskell**
+```haskel
+soma :: Int -> Int -> Int
+soma x y = x + y
+
+minhaFuncao :: (Int -> Int -> Int) -> Int
+minhaFuncao f = f 3 4
+
+-- uso: minhaFuncao soma  => 7
+```
+- Aqui:
+  - soma é uma função
+  - minhaFuncao recebe uma função como parâmetro
+  - Isso mostra que funções são valores — podem ser passadas como argumento.
+
+
+#### 2. **Função de alta ordem (high-order function):**
+- Uma função de alta ordem é uma função que:
+  - **Recebe outras** funções como parâmetro;
+  - OU **retorna** uma **função** como resultado.
+
+**Função que recebe outras como parâmetro:**
+```haskell
+aplicaDuasVezes :: (a -> a) -> a -> a
+aplicaDuasVezes f x = f (f x)
+
+-- exemplo: aplicaDuasVezes (*2) 3 => 12
+```
+- Aqui:
+  - `aplicaDuasVezes` recebe a função `f` e o atributo `x`;
+  - Aplica a função `f` ao atributo, nesse caso "vezes 2".
+
+**Função que retorna outra função:**
+```haskell
+multiplicador :: int -> (int -> int)
+multiplicador x = (\y -> x * y)
+
+-- exemplo: (multiplicador 3) 4 => 12
+```
+
+- Aqui:
+  - `multiplicador 3` retorna uma função `\y -> 3 * y`
+  - Esta **função** é então aplicada a 4 → resultado 12
+
+**Em resumo:**
+- Funções de alta ordem são possíveis porque funções são de primeira classe. Se você pode passar e retornar funções, pode criar funções que combinam, transformam ou produzem funções. "Base do funcional"
+
+#### 3. Funções Puras:
+- Uma função pura é uma função que sempre produz o mesmo resultado para os mesmos argumentos e não causa efeitos colaterais (side effects). Para isso ocorrer existem dois **critérios fundamentais**
+  - **Determinismo**: o resultado depende somente dos argumentos.
+  - **Sem efeitos colaterais**: a função não altera nada fora dela (não lê ou escreve em arquivos, não modifica variáveis globais, não imprime na tela, etc.).
