@@ -35,6 +35,8 @@ somar _ _ = 0
 
 bonusStrike = sum . take 2 -- pega os 2 da frente e soma
 bonusSpare = sum . take 1 -- pega 1 da frente e soma
+
+
 formatarFrames :: [Int] -> String
 formatarFrames jogadas =
   let (primeiros9, restante) = extrair9prim jogadas
