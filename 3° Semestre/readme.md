@@ -726,6 +726,21 @@ class Gato extends Animal {
 **Explicação:**  
 - `Animal` é a **classe pai** (superclasse), contendo atributos e métodos comuns.  
 - `Cachorro` e `Gato` são **subclasses** e herdam `nome` e `fazerSom()` de `Animal`, mas cada um pode ter um comportamento específico.  
+
+## Revisão para a P2
+1. Lista 8 -> se n cair isso daq eu sou maluco
+	- ex1 - feito, mas revisar letra a)
+	- ex2 - feito, revisar o codigo do insertion
+	- ex3 - feito, revisar arvore binaria e outras estruturas em java
+	- ex4 - feito, revisar pilha rapidamente e declaração de array em java
+	- ex5 - NÃO FEITO
+2. Lista 9 -> acho que não vai ter tanta importancia na prova
+	- ex1 - feito
+	- ex2 - semi feito, revisar dnv essa parte de usar a pilha no queue
+	- ex... - NÃO FEITO.
+ 
+
+
 ---
 ### **Em resumo**
 ![](data/slide_17_POO_UML.png)
