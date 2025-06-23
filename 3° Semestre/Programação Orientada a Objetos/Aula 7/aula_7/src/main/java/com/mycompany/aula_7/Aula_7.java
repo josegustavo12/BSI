@@ -11,6 +11,7 @@ package com.mycompany.aula_7;
 public class Aula_7 {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        CopiadorDeArquivos copiador = new CopiadorDeArquivos();
+        copiador.copiar("entrada.txt", "saida.txt" );
     }
 }
